@@ -4,6 +4,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+
+import org.example.Features.Login.Service.LoginService;
+import org.example.Features.Register.Screen.RegisterForm;
+import org.json.JSONObject;
 
 public class LoginForm {
     private JFrame frame;
@@ -11,13 +19,14 @@ public class LoginForm {
     private JPasswordField passwordField;
     private JButton loginButton;
 
+    LoginService loginService;
     // Singleton instance
     private static LoginForm instance;
 
     // Private constructor
     private LoginForm() {
         // Initialize JFrame
-        frame = new JFrame("Login Form");
+        frame = new JFrame("Login");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Set layout manager for flexibility
@@ -47,6 +56,17 @@ public class LoginForm {
         loginButton.setFocusPainted(false);
         loginButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+        // Register Label and Button
+        JLabel registerLabel = new JLabel("Don't have an account?");
+        registerLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+
+        JButton registerButton = new JButton("Register");
+        registerButton.setFont(new Font("Arial", Font.BOLD, 14));
+        registerButton.setBackground(new Color(0, 123, 255));
+        registerButton.setForeground(Color.WHITE);
+        registerButton.setFocusPainted(false);
+        registerButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
         // Add components to the panel
         panel.add(userNameLabel);
         panel.add(userNameField);
@@ -54,6 +74,8 @@ public class LoginForm {
         panel.add(passwordField);
         panel.add(new JLabel("")); // Empty space
         panel.add(loginButton);
+        panel.add(registerLabel);
+        panel.add(registerButton);
 
         // Add the panel to the frame
         frame.add(panel, BorderLayout.CENTER);
@@ -64,7 +86,29 @@ public class LoginForm {
             public void actionPerformed(ActionEvent e) {
                 String userName = userNameField.getText();
                 String password = new String(passwordField.getPassword());
-                JOptionPane.showMessageDialog(frame, "Username: " + userName + "\nPassword: " + password);
+
+                // Send login request to backend
+                String response = loginService.loginUser(userName, password);
+
+                // Handle response
+                if (response != null && !response.isEmpty()) {
+                    JSONObject responseJson = new JSONObject(response);
+                    if (responseJson.has("message")) {
+                        JOptionPane.showMessageDialog(frame, responseJson.getString("message"));
+                    } else if (responseJson.has("error")) {
+                        JOptionPane.showMessageDialog(frame, responseJson.getString("error"));
+                    }
+                }
+            }
+        });
+
+        // Register Button ActionListener
+        registerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Open the Register Form
+                RegisterForm.getInstance(); // Navigate to the register form
+                frame.dispose(); // Close the login form
             }
         });
 

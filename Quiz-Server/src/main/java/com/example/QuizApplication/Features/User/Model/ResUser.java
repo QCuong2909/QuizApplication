@@ -8,13 +8,13 @@ public class ResUser {
     @Id
     private String id;
 
-    private String username;
+    private String userName;
     private String password;
     private boolean isAdmin;
 
-    public ResUser(String id, String username, String password) {
+    public ResUser(String id, String userName, String password) {
         this.id = id;
-        this.username = username;
+        this.userName = userName;
         this.password = password;
         this.isAdmin = false;
     }
@@ -27,12 +27,12 @@ public class ResUser {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String username) {
+        this.userName = username;
     }
 
     public String getPassword() {
@@ -55,7 +55,7 @@ public class ResUser {
     public String toString() {
         return "ResUser{" +
                 "id='" + id + '\'' +
-                ", username='" + username + '\'' +
+                ", username='" + userName + '\'' +
                 ", password='" + password + '\'' +
                 ", isAdmin=" + isAdmin +
                 '}';

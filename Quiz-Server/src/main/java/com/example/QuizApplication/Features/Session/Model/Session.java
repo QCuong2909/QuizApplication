@@ -1,14 +1,16 @@
 package com.example.QuizApplication.Features.Session.Model;
 
-import com.example.QuizApplication.Features.Answer.Model.Answer;
-import com.example.QuizApplication.Features.User.Model.ResUser;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
+import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotEmpty;
-import java.time.LocalDateTime;
-import java.util.Date;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
+
+import com.example.QuizApplication.Features.User.Model.ResUser;
+
+@Document(collection = "sessions")
 public class Session {
     @Id
     private String id;
@@ -22,12 +24,12 @@ public class Session {
 
     @DocumentReference(lazy = true)
     @NotEmpty(message = "User ID is required")
-    private ResUser uId;
+    private ResUser userId;
 
     public Session(String sessionId, LocalDateTime  timeLogIn, ResUser uId) {
         this.sessionId = sessionId;
         this.timeLogIn = timeLogIn;
-        this.uId = uId;
+        this.userId = uId;
     }
 
     public Session(String userId, LocalDateTime now, String sessionId) {
@@ -65,12 +67,12 @@ public class Session {
         this.timeLogOut = timeLogOut;
     }
 
-    public ResUser getuId() {
-        return uId;
+    public ResUser getUserId() {
+        return userId;
     }
 
-    public void setuId(ResUser uId) {
-        this.uId = uId;
+    public void setUserId(ResUser uId) {
+        this.userId = uId;
     }
 
     @Override
@@ -80,7 +82,7 @@ public class Session {
                 ", sessionId='" + sessionId + '\'' +
                 ", timeLogIn=" + timeLogIn +
                 ", timeLogOut=" + timeLogOut +
-                ", uId=" + uId +
+                ", uId=" + userId +
                 '}';
     }
 }
